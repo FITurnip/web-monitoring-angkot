@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Home, BarChart, Settings, User, Car, Route, Monitor } from 'lucide-vue-next';
+import { Home, BarChart, Settings, User, Car, Route, Monitor, PersonStanding } from 'lucide-vue-next';
 
 export default defineComponent({
     props: ['to', 'icon', 'label'],
@@ -20,7 +20,8 @@ export default defineComponent({
                 settings: Settings,
                 car: Car,
                 route: Route,
-                monitor: Monitor
+                monitor: Monitor,
+                person: PersonStanding
              }[this.icon];
         }
     }

@@ -310,6 +310,7 @@ export default defineComponent({
                 if (!isMarkingMode) return;
 
                 const { lat, lng } = e.latlng;
+                console.log(e.latlng);
 
                 // Remove existing custom marker if any
                 if (window.customMarker) {
@@ -319,7 +320,7 @@ export default defineComponent({
                 // Create and store new custom marker
                 window.customMarker = L.marker([lat, lng])
                     .addTo(map)
-                    .bindPopup(`Custom marker at:<br>Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`)
+                    .bindPopup(`Marker at:<br>Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`)
                     .openPopup();
 
                 // Turn off marking mode

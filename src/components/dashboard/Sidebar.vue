@@ -4,8 +4,9 @@
         <nav class="flex flex-col space-y-4">
             <NavItem to="/" icon="home" label="Home" />
             <NavItem to="/halt" icon="monitor" label="Halt" />
-            <NavItem to="/halt" icon="route" label="Route" />
-            <NavItem to="/halt" icon="car" label="Angkot" />
+            <NavItem to="/jurusan" icon="route" label="Route" />
+            <NavItem to="/angkot" icon="car" label="Angkot" />
+            <NavItem to="/supir" icon="person" label="Supir" />
             <NavItem to="/profile" icon="user" label="Profile" />
             <NavItem to="/settings" icon="settings" label="Settings" />
         </nav>

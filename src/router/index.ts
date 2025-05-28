@@ -15,9 +15,23 @@ const router = createRouter({
         {
           path: '/halt',
           component: () => import('../views/HaltMonitor.vue'),
+        },
+        {
+          path: '/supir',
+          component: () => import('../views/Supir.vue'),
         }
       ]
     },
+    // {
+    //   path: '/supir',
+    //   component: Dashboard,
+    //   children: [
+    //     {
+    //         path: '/',
+    //         component: () => import('../views/Home.vue'),
+    //     },
+    //   ]
+    // },
   ],
 })
 
