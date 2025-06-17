@@ -15,17 +15,17 @@
             <LineChart
                 :chart-labels="requestPerJam.label"
                 :chart-data="requestPerJam.data"
-                chart-label="Request Per Jam"
+                chart-label="Jumlah Request Naik Angkot per Jam"
             />
         </Container>
-    
-    
+
+
         <Container className="w-1/2">
-            <!-- <LineChart
-                :chart-labels="['Jan', 'Feb', 'Mar', 'Apr']"
-                :chart-data="[5, 10, 7, 14]"
-                chart-label="Revenue"
-            /> -->
+            <LineChart
+                :chart-labels="penumpangPerJam.label"
+                :chart-data="penumpangPerJam.data"
+                chart-label="Jumlah Penumpang Naik Angkot per Jam"
+            />
         </Container>
     </div>
 
@@ -80,12 +80,40 @@ export default defineComponent({
                 dataRequestPerJam.push(e.total);
             });
 
-            requestPerJam.value = { label : labelRequestPerJam, data : dataRequestPerJam };
+            // requestPerJam.value = { label : labelRequestPerJam, data : dataRequestPerJam };
+            requestPerJam.value = {
+                label: ['23:00', '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00'],
+                data: [4, 2, 1, 1, 0, 3, 7, 15, 28, 34, 26, 19]
+            };
+        }
+
+        const penumpangPerJam = ref({
+            label: [], data: []
+        });
+
+        const setGrafikPenumpangPerJam = async () => {
+            // const response = await axios.post(
+            //     'http://127.0.0.1:8000/get-penumpang-per-jam'
+            // );
+            // const result = response.data.result;
+
+            // const labelPenumpangPerJam = [], dataPenumpangPerJam = [];
+            // result.forEach(e => {
+            //     labelPenumpangPerJam.push(e._id.hour);
+            //     dataPenumpangPerJam.push(e.total);
+            // });
+
+            // PenumpangPerJam.value = { label : labelPenumpangPerJam, data : dataPenumpangPerJam };
+            penumpangPerJam.value = {
+                label: ['23:00', '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00'],
+                data: [4, 2, 1, 1, 0, 3, 7, 10, 25, 33, 24, 5]
+            };
         }
 
         onMounted(() => {
             setMap();
             setGrafikRequestPerJam();
+            setGrafikPenumpangPerJam();
         });
 
         const setMap = () => {
@@ -202,7 +230,8 @@ export default defineComponent({
 
             haltList,
 
-            requestPerJam
+            requestPerJam,
+            penumpangPerJam
         };
     },
 });

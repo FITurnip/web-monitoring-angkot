@@ -1,7 +1,7 @@
 <template>
     <header class="bg-gray-900 text-white p-4 flex justify-between items-center shadow-md">
         <!-- Title -->
-        <h1 class="text-xl font-semibold">Dashboard</h1>
+        <h1 class="text-xl font-semibold">Monitor</h1>
 
         <!-- Right Section (Icons) -->
         <div class="flex items-center space-x-4">

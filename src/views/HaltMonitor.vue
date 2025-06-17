@@ -126,25 +126,71 @@
     </div>
 
     <Modal :isOpen="showModal" @close="showModal = false">
-      <template #header>
-        <h2 class="text-2xl font-bold">Hello 👋</h2>
-      </template>
+  <template #header>
+    <h2 class="text-2xl font-bold text-gray-800">Form Halte</h2>
+  </template>
 
-      <template #default>
-        <p>This is some custom modal content. You can slot anything here.</p>
-      </template>
+  <template #default>
+    <form @submit.prevent="handleSave" class="space-y-6">
+      <!-- Koordinat Field dengan tombol map pin -->
+      <div>
+        <label class="block mb-2 font-semibold text-gray-700">Koordinat:</label>
+        <div class="flex gap-2">
+          <input
+            type="text"
+            readonly
+            :value="formattedCoordinate"
+            class="flex-grow border border-gray-300 rounded-md px-3 py-2 bg-gray-100 text-gray-600 select-text"
+          />
+          <button
+            type="button"
+            class="w-12 h-10 rounded-md bg-blue-100 flex items-center justify-center hover:bg-blue-200 transition-colors"
+            title="Marking di map"
+            aria-label="Marking di map"
+          >
+            <MapPin class="w-6 h-6 text-blue-600" />
+          </button>
+        </div>
+      </div>
 
-      <template #footer>
-        <button @click="showModal = false" class="px-4 py-2 bg-blue-600 text-white rounded-xl">Got it!</button>
-      </template>
-    </Modal>
+      <!-- onBoardDeviceId Field -->
+      <div>
+        <label
+          for="onBoardDeviceId"
+          class="block mb-2 font-semibold text-gray-700"
+        >
+          onBoardDeviceId
+        </label>
+        <input
+          id="onBoardDeviceId"
+          type="text"
+          v-model="onBoardDeviceId"
+          placeholder="Masukkan onBoardDeviceId"
+          class="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+        />
+      </div>
+    </form>
+  </template>
+
+  <template #footer>
+    <div class="flex justify-end items-end">
+        <button
+        @click="handleSave"
+        class="px-5 py-2 mt-6 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+        >
+        Simpan
+        </button>
+    </div>
+  </template>
+</Modal>
+
 </template>
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from "vue";
 import Container from "@/components/Container.vue";
 import Modal from "@/components/Modal.vue";
-import { Edit, Trash2 } from 'lucide-vue-next';
+import { Edit, Trash2, MapPin } from 'lucide-vue-next';
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import axios from 'axios';
@@ -156,6 +202,7 @@ export default defineComponent({
 
         Edit,
         Trash2,
+        MapPin
     },
     setup() {
         const ruteList = ref([
@@ -251,6 +298,8 @@ export default defineComponent({
                     <button id="clear-marker-btn" style="display: none;">Bersihkan</button>
                     <button id="cancel-mark-btn" style="display: none;">Batal</button>
                     <button id="mark-location-btn">Tambah Halt</button>
+                    <button id="edit-marker-btn" style="display: none; background: #f59e0b;">Edit</button>
+                    <button id="delete-marker-btn" style="display: none; background: #ef4444;">Hapus</button>
                 `;
 
                 
@@ -267,22 +316,25 @@ export default defineComponent({
 
                 if (markBtn && cancelBtn && clearBtn) {
                     markBtn.onclick = () => {
-                        setTimeout(() => {
-                            isMarkingMode = true;
-                        }, 100);
+                        showModal.value = true;
+                        // setTimeout(() => {
+                        //     isMarkingMode = true;
+                        // }, 100);
                         
-                        markBtn.style.display = "none";
-                        cancelBtn.style.display = "inline-block";
-                        clearBtn.style.display = window.customMarker ? "inline-block" : "none";
+                        // markBtn.style.display = "none";
+                        // cancelBtn.style.display = "inline-block";
+                        // clearBtn.style.display = window.customMarker ? "inline-block" : "none";
+                        // document.getElementById("edit-marker-btn")!.style.display = "none";
+                        // document.getElementById("delete-marker-btn")!.style.display = "none"
 
-                        // Deselect selected marker
-                        if (window.selectedMarker) {
-                            window.selectedMarker.setStyle({
-                                color: 'blue',
-                                fillColor: '#30a1ff'
-                            });
-                            window.selectedMarker = null;
-                        }
+                        // // Deselect selected marker
+                        // if (window.selectedMarker) {
+                        //     window.selectedMarker.setStyle({
+                        //         color: 'blue',
+                        //         fillColor: '#30a1ff'
+                        //     });
+                        //     window.selectedMarker = null;
+                        // }
                     };
 
                     cancelBtn.onclick = () => {
@@ -302,6 +354,13 @@ export default defineComponent({
                         clearBtn.style.display = "none";
                     };
 
+                }
+
+                const editBtn = document.getElementById("edit-marker-btn");
+                if (editBtn) {
+                    editBtn.onclick = () => {
+                        showModal.value = true; // buka modal
+                    };
                 }
             }, 100);
 
@@ -410,6 +469,14 @@ export default defineComponent({
                             });
     
                             window.selectedMarker = marker;
+
+                            const editBtn = document.getElementById("edit-marker-btn");
+                            const deleteBtn = document.getElementById("delete-marker-btn");
+
+                            if (editBtn && deleteBtn) {
+                                editBtn.style.display = "inline-block";
+                                deleteBtn.style.display = "inline-block";
+                            }
                         }
 
                         selectedCoordinate.value = {
@@ -425,6 +492,12 @@ export default defineComponent({
 
         const showModal = ref(false)
 
+        const formattedCoordinate = computed(() => {
+            if (!selectedCoordinate.value) return '';
+            return `${selectedCoordinate.value.lat.toFixed(6)}, ${selectedCoordinate.value.lng.toFixed(6)}`;
+        });
+
+
         return {
             ruteList,
             ruteSelected,
@@ -438,7 +511,8 @@ export default defineComponent({
 
             showModal,
 
-            selectedCoordinate
+            selectedCoordinate,
+            formattedCoordinate
         }
     }
 });
